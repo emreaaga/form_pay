@@ -1,6 +1,15 @@
-import { EmojiHappy } from "iconsax-react";
+import { useNavigate } from "react-router-dom";
 
-function App() {
+function VerificationPage() {
+
+  const navigate = useNavigate();
+
+  const handleSubmit = () => {
+    // Добавляем нужную логику для отправки данных, например, верификацию и т.д.
+    // После чего делаем переход на нужную страницу, например /card
+    navigate("/card"); // Переходим на страницу оформления карты
+  };
+
   return (
     <>
       <div className="flex flex-col justify-center font-[sans-serif] sm:h-screen p-4 bg-gray-50 dark:bg-gray-900">
@@ -55,6 +64,7 @@ function App() {
             <div className="!mt-12">
               <button
                 type="button"
+                onClick={handleSubmit}
                 className="w-full py-3 px-4 text-sm tracking-wider font-semibold rounded-md text-white bg-blue-500 hover:bg-blue-600 focus:outline-none"
               >
                 Отправить
@@ -67,4 +77,5 @@ function App() {
   );
 }
 
-export default App;
+export default VerificationPage;
+
