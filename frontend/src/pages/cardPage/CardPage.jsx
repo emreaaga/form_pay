@@ -1,13 +1,13 @@
 import { useNavigate } from "react-router-dom";
+import {useTheme} from '@hooks/useTheme';
+
 
 function CardPage() {
-
   const navigate = useNavigate();
+  const { icons } = useTheme();
 
   const handleSubmit = () => {
-    // Добавляем нужную логику для отправки данных, например, верификацию и т.д.
-    // После чего делаем переход на нужную страницу, например /card
-    navigate("/"); // Переходим на страницу оформления карты
+    navigate("/");
   };
 
   return (
@@ -16,7 +16,7 @@ function CardPage() {
         <div className="max-w-md w-full mx-auto border border-gray-300 dark:border-gray-600 rounded-2xl p-8 bg-white dark:bg-gray-800">
           <div className="text-center mb-12">
             <img
-              src="https://infinitypay.uz/_next/static/media/logo.4ab068f7.svg"
+              src={icons.logo}
               alt="logo"
               className="w-40 inline-block dark:filter dark:brightness-150"
             />
@@ -27,7 +27,7 @@ function CardPage() {
               Поздравляем, верификация пройдена!
             </h2>
             <p className="text-gray-600 dark:text-gray-400 mb-6">
-              Теперь вы можете оформить карту и начать пользоваться всеми преимуществами. Просто нажмите на кнопку ниже.
+              Теперь вы можете заказать карту и начать пользоваться всеми преимуществами. Просто нажмите на кнопку ниже.
             </p>
 
             <div className="mb-6">
@@ -42,7 +42,7 @@ function CardPage() {
                 onClick={handleSubmit}
                 className="w-full py-3 px-4 text-sm tracking-wider font-semibold rounded-md text-white bg-green-700 hover:bg-green-800 focus:outline-none transition duration-200"
               >
-                Оформить карту
+                Заказать карту
               </button>
             </div>
           </div>

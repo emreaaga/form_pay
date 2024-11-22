@@ -1,7 +1,6 @@
-import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import VerificationPage from "./VerificationPage";
-import CardPage from "./CardPage";
+import VerificationPage from "./pages/verificationForm/VerificationPage";
+import CardPage from "./pages/cardPage/CardPage";
 
 function App() {
   return (

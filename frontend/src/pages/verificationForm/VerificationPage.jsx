@@ -1,13 +1,13 @@
 import { useNavigate } from "react-router-dom";
-
+import {useTheme} from '@hooks/useTheme';
+ 
 function VerificationPage() {
-
   const navigate = useNavigate();
+  const { icons } = useTheme();
+
 
   const handleSubmit = () => {
-    // Добавляем нужную логику для отправки данных, например, верификацию и т.д.
-    // После чего делаем переход на нужную страницу, например /card
-    navigate("/card"); // Переходим на страницу оформления карты
+    navigate("/card");
   };
 
   return (
@@ -16,11 +16,7 @@ function VerificationPage() {
         <div className="max-w-md w-full mx-auto border border-gray-300 dark:border-gray-600 rounded-2xl p-8 bg-white dark:bg-gray-800">
           <div className="text-center mb-12">
             <a href="javascript:void(0)">
-              <img
-                src="https://infinitypay.uz/_next/static/media/logo.4ab068f7.svg"
-                alt="logo"
-                className="w-40 inline-block"
-              />
+              <img src={icons.logo} alt="logo" className="w-40 inline-block" />
             </a>
           </div>
 
@@ -78,4 +74,3 @@ function VerificationPage() {
 }
 
 export default VerificationPage;
-
