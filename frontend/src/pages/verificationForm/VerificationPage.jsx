@@ -34,7 +34,7 @@ function VerificationPage() {
                 ПИНФЛ <span className="text-red-500">*</span>
               </label>
               <Controller
-                name="pinfl"
+                name="auth[pinfl]"
                 control={control}
                 rules={{ required: "ПИНФЛ обязателен", pattern: { value: /^\d{13}$/, message: "Некорректный ПИНФЛ" } }}
                 render={({ field }) => (
@@ -53,7 +53,7 @@ function VerificationPage() {
                 Серия Паспорта <span className="text-red-500">*</span>
               </label>
               <Controller
-                name="passport"
+                name="auth[pass_data]"
                 control={control}
                 rules={{ required: "Серия паспорта обязательна", pattern: { value: /^[A-Z]{2}\d{7}$/, message: "Некорректная серия паспорта" } }}
                 render={({ field }) => (
@@ -72,7 +72,7 @@ function VerificationPage() {
                 Дата рождения <span className="text-red-500">*</span>
               </label>
               <Controller
-                name="dob"
+                name="auth[birth_date]"
                 control={control}
                 rules={{ required: "Дата рождения обязательна" }}
                 render={({ field }) => (
