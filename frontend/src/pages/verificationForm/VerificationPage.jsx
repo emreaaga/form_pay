@@ -1,21 +1,39 @@
 import { useNavigate } from "react-router-dom";
 import { useTheme } from "@hooks/useTheme";
 import { useForm, Controller } from "react-hook-form";
+import { useEffect } from "react";
+import axios from "axios";
 
 function VerificationPage() {
   const navigate = useNavigate();
   const { icons } = useTheme();
-  
+
   const {
     control,
     handleSubmit,
     formState: { errors },
   } = useForm();
-  
-  const onSubmit = (data) => {
-    // тут ты можешь обработать данные
-    console.log(data);
-    navigate("/card");
+
+  useEffect(() => {
+    axios.get("/csrf-cookie").catch((err) => {
+      console.error("Ошибка при получении CSRF-токена:", err);
+    });
+  }, []);
+
+  const onSubmit = async (data) => {
+    try {
+      const response = await axios.post("/api/verify", data, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+        withCredentials: true, // Включаем куки (включая CSRF)
+      });
+
+      console.log("Успешный ответ:", response.data);
+      navigate("/card");
+    } catch (err) {
+      console.error("Ошибка при отправке формы:", err.response?.data || err);
+    }
   };
 
   return (
@@ -34,9 +52,12 @@ function VerificationPage() {
                 ПИНФЛ <span className="text-red-500">*</span>
               </label>
               <Controller
-                name="auth[pinfl]"
+                name="pinfl"
                 control={control}
-                rules={{ required: "ПИНФЛ обязателен", pattern: { value: /^\d{13}$/, message: "Некорректный ПИНФЛ" } }}
+                rules={{
+                  required: "ПИНФЛ обязателен",
+                  pattern: { value: /^\d{13}$/, message: "Некорректный ПИНФЛ" },
+                }}
                 render={({ field }) => (
                   <input
                     {...field}
@@ -46,16 +67,24 @@ function VerificationPage() {
                   />
                 )}
               />
-              {errors.pinfl && <p className="text-red-500 text-xs">{errors.pinfl.message}</p>}
+              {errors.pinfl && (
+                <p className="text-red-500 text-xs">{errors.pinfl.message}</p>
+              )}
             </div>
             <div>
               <label className="text-gray-800 dark:text-white text-sm mb-2 block">
                 Серия Паспорта <span className="text-red-500">*</span>
               </label>
               <Controller
-                name="auth[pass_data]"
+                name="passport"
                 control={control}
-                rules={{ required: "Серия паспорта обязательна", pattern: { value: /^[A-Z]{2}\d{7}$/, message: "Некорректная серия паспорта" } }}
+                rules={{
+                  required: "Серия паспорта обязательна",
+                  pattern: {
+                    value: /^[A-Z]{2}\d{7}$/,
+                    message: "Некорректная серия паспорта",
+                  },
+                }}
                 render={({ field }) => (
                   <input
                     {...field}
@@ -65,14 +94,18 @@ function VerificationPage() {
                   />
                 )}
               />
-              {errors.passport && <p className="text-red-500 text-xs">{errors.passport.message}</p>}
+              {errors.passport && (
+                <p className="text-red-500 text-xs">
+                  {errors.passport.message}
+                </p>
+              )}
             </div>
             <div>
               <label className="text-gray-800 dark:text-white text-sm mb-2 block">
                 Дата рождения <span className="text-red-500">*</span>
               </label>
               <Controller
-                name="auth[birth_date]"
+                name="dob"
                 control={control}
                 rules={{ required: "Дата рождения обязательна" }}
                 render={({ field }) => (
@@ -83,7 +116,9 @@ function VerificationPage() {
                   />
                 )}
               />
-              {errors.dob && <p className="text-red-500 text-xs">{errors.dob.message}</p>}
+              {errors.dob && (
+                <p className="text-red-500 text-xs">{errors.dob.message}</p>
+              )}
             </div>
           </div>
 
