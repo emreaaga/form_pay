@@ -11,6 +11,10 @@
 |
 */
 
+define('MYID_GRANT_TYPE', 'client_credentials');
+define('MYID_CLIENT_ID', 'quickpay_websdk-8S1qvt2gzLuWliF6lygBeAH45hFJeDgTkTBkdZUJ');
+define('MYID_CLIENT_SECRET', 'nXsH2CCVJvgSi63KYfoABfWcmS3erHuWq9sxtGF5jNI4H68oVZmjUsPnCqrxeTAsUVkyrblGFECB9Yp8TvFz7cE01eIOFFf6xtPT');
+
 $app = new Illuminate\Foundation\Application(
     $_ENV['APP_BASE_PATH'] ?? dirname(__DIR__)
 );
