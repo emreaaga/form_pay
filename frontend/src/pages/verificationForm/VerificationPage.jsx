@@ -17,7 +17,7 @@ function VerificationPage() {
 
   useEffect(() => {
     axios
-      .get("http://127.0.0.1:8000/get_csrf")
+      .get("http://127.0.0.1:8000/api/get_csrf")
       .then((response) => {
         const csrfToken = response.data;
         setCsrfToken(csrfToken);
@@ -29,7 +29,7 @@ function VerificationPage() {
 
   const onSubmit = async (data) => {
     try {
-      const response = await axios.post("/api/verify", data, {
+      const response = await axios.post("http://127.0.0.1:8000/auth", data, {
         headers: {
           "Content-Type": "application/json",
         },
@@ -55,6 +55,7 @@ function VerificationPage() {
         <form onSubmit={handleSubmit(onSubmit)}>
           <div className="space-y-6">
             <div>
+              <input type='hidden' name='_token' value={csrfToken} />
               <label className="text-gray-800 dark:text-white text-sm mb-2 block">
                 ПИНФЛ <span className="text-red-500">*</span>
               </label>
@@ -68,7 +69,6 @@ function VerificationPage() {
                 render={({ field }) => (
                   <input
                     {...field}
-                    value={field.value || csrfToken}
                     type="text"
                     className="text-gray-800 dark:text-white bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 w-full text-sm px-4 py-3 rounded-md outline-blue-500"
                     placeholder="12345678901234"
@@ -96,7 +96,6 @@ function VerificationPage() {
                 render={({ field }) => (
                   <input
                     {...field}
-                    value={field.value || csrfToken}
                     type="text"
                     className="text-gray-800 dark:text-white bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 w-full text-sm px-4 py-3 rounded-md outline-blue-500"
                     placeholder="AA1234567"
@@ -120,7 +119,6 @@ function VerificationPage() {
                 render={({ field }) => (
                   <input
                     {...field}
-                    value={field.value || csrfToken}
                     type="date"
                     className="text-gray-800 dark:text-white bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 w-full text-sm px-4 py-3 rounded-md outline-blue-500"
                   />
