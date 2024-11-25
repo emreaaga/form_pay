@@ -17,11 +17,12 @@ class Site extends Controller
     }
     public function auth(Request $request) {
 
-        if($request->post('auth')) {
-            $request_data = $request->post('auth');
+        if($request->get('auth')) {
+            $request_data = $request->get('auth');
             foreach($request_data as $key =>$value) {
                 $request_data[$key] = AppServiceProvider::filter_input($key, $value);
             }
+
             $first_step = AppServiceProvider::myid_first_step();
             $second_step = AppServiceProvider::myid_second_step($first_step['array']);
             $params = [
@@ -34,9 +35,15 @@ class Site extends Controller
                 'theme'=>'dark',
                 'lang'=>'ru',
             ];
+
             $third_step = AppServiceProvider::myid_third_step(['send_data'=>$params]);
-            echo $third_step;
+            return redirect($third_step['api_url']);
         }
 
+    }
+
+    public function get_csrf() {
+        var_dump(csrf_token());die;
+        echo csrf_token();
     }
 }

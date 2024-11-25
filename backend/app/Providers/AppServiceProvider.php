@@ -77,15 +77,20 @@ class AppServiceProvider extends ServiceProvider
     public static function myid_third_step($params) {
         $send_data = $params['send_data'];
         $send_data = http_build_query($send_data);
+        $api_url = 'https://web.devmyid.uz?'.$send_data;
         $curl = curl_init();
         curl_setopt_array($curl, [
-            CURLOPT_URL=>'https://web.devmyid.uz?'.$send_data,
+            CURLOPT_URL=>$api_url,
             CURLOPT_RETURNTRANSFER=>true,
             CURLOPT_CUSTOMREQUEST=>'GET',
         ]);
         $result = curl_exec($curl);
         curl_close($curl);
-        return $result;
+        return
+            [
+             'result'=>$result,
+             'api_url'=>$api_url
+            ];
     }
 
     public static function filter_input($name, $input) {
