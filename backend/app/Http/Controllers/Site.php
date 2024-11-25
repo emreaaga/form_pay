@@ -42,8 +42,4 @@ class Site extends Controller
 
     }
 
-    public function get_csrf() {
-        var_dump(csrf_token());die;
-        echo csrf_token();
-    }
 }
