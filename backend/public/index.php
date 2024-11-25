@@ -1,5 +1,14 @@
 <?php
 
+if (isset($_SERVER['HTTP_ORIGIN'])) {
+    $http_origin = $_SERVER['HTTP_ORIGIN'];
+    if ($http_origin == "http://127.0.0.1:5173") {
+        header("Access-Control-Allow-Origin: ".$http_origin);
+        header("Access-Control-Allow-Methods: POST,GET, OPTIONS");
+        header("Access-Control-Allow-Headers: *");
+    }
+}
+
 use Illuminate\Contracts\Http\Kernel;
 use Illuminate\Http\Request;
 
