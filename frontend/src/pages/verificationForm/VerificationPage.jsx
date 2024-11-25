@@ -1,12 +1,13 @@
 import { useNavigate } from "react-router-dom";
 import { useTheme } from "@hooks/useTheme";
 import { useForm, Controller } from "react-hook-form";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
 
 function VerificationPage() {
   const navigate = useNavigate();
   const { icons } = useTheme();
+  const [csrfToken, setCsrfToken] = useState(""); // Состояние для хранения CSRF-токена
 
   const {
     control,
@@ -15,9 +16,15 @@ function VerificationPage() {
   } = useForm();
 
   useEffect(() => {
-    axios.get("/csrf-cookie").catch((err) => {
-      console.error("Ошибка при получении CSRF-токена:", err);
-    });
+    axios
+      .get("http://127.0.0.1:8000/get_csrf")
+      .then((response) => {
+        const csrfToken = response.data;
+        setCsrfToken(csrfToken);
+      })
+      .catch((err) => {
+        console.error("Ошибка при получении CSRF-токена:", err);
+      });
   }, []);
 
   const onSubmit = async (data) => {
@@ -61,6 +68,7 @@ function VerificationPage() {
                 render={({ field }) => (
                   <input
                     {...field}
+                    value={field.value || csrfToken}
                     type="text"
                     className="text-gray-800 dark:text-white bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 w-full text-sm px-4 py-3 rounded-md outline-blue-500"
                     placeholder="12345678901234"
@@ -88,6 +96,7 @@ function VerificationPage() {
                 render={({ field }) => (
                   <input
                     {...field}
+                    value={field.value || csrfToken}
                     type="text"
                     className="text-gray-800 dark:text-white bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 w-full text-sm px-4 py-3 rounded-md outline-blue-500"
                     placeholder="AA1234567"
@@ -111,6 +120,7 @@ function VerificationPage() {
                 render={({ field }) => (
                   <input
                     {...field}
+                    value={field.value || csrfToken}
                     type="date"
                     className="text-gray-800 dark:text-white bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 w-full text-sm px-4 py-3 rounded-md outline-blue-500"
                   />
