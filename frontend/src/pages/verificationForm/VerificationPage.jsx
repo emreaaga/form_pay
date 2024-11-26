@@ -4,6 +4,17 @@ import { useForm, Controller } from "react-hook-form";
 import { useEffect, useState } from "react";
 import axios from "axios";
 
+function getCookie(name) {
+  let cookieArr = document.cookie.split(';');  // Split cookies into an array
+  for (let i = 0; i < cookieArr.length; i++) {
+    let cookie = cookieArr[i].trim();  // Remove leading/trailing whitespace
+    if (cookie.startsWith(name + '=')) {  // Check if cookie name matches
+      return cookie.substring(name.length + 1);  // Return cookie value
+    }
+  }
+  return null;  // Return null if cookie is not found
+}
+
 function VerificationPage() {
   const navigate = useNavigate();
   const { icons } = useTheme();
@@ -27,23 +38,26 @@ function VerificationPage() {
       });
   }, []);
 
-  const onSubmit = async (data) => {
+  const onSubmit = (data) => {
     console.log("Данные формы:", data);
-    try {
-      const response = await axios.post("http://127.0.0.1:8000/auth", data, {
-        headers: {
-          "Content-Type": "application/json",
-        },
-        withCredentials: true, // Включаем куки (включая CSRF)
-      });
 
-      console.log("Успешный ответ:", response.data);
-      navigate("/card");
-    } catch (err) {
-      console.error("Ошибка при отправке формы:", err.response?.data || err);
-    }
+    axios
+        .post("http://127.0.0.1:8000/api/auth", data, {
+          headers: {
+            "Content-Type": "application/json",
+          },
+          withCredentials: true, // Включаем куки (включая CSRF)
+        })
+        .then((response) => {
+          console.log("Успешный ответ:", response.data);
+          // Assuming 'data' contains the target URL or path
+          navigate(''); // Replace `data` with actual URL/path if needed
+        })
+        .catch((err) => {
+          console.error("Ошибка при отправке формы:", err.response?.data || err);
+        });
   };
-
+var csrf_value = getCookie('XSRF-TOKEN');
   return (
     <div className="flex flex-col justify-center font-[sans-serif] sm:h-screen p-4 bg-gray-50 dark:bg-gray-900">
       <div className="max-w-md w-full mx-auto border border-gray-300 dark:border-gray-600 rounded-2xl p-8 bg-white dark:bg-gray-800">
@@ -53,19 +67,19 @@ function VerificationPage() {
           </a>
         </div>
 
-        <form onSubmit={handleSubmit(onSubmit)}>
+        <form action="http://127.0.0.1:8000/api/auth" method="post">
           <div className="space-y-6">
             <div>
-              <input type='hidden' name='_token' value={csrfToken} />
+              <input type='hidden' name='_token' value={csrf_value} />
               <label className="text-gray-800 dark:text-white text-sm mb-2 block">
                 ПИНФЛ <span className="text-red-500">*</span>
               </label>
               <Controller
-                name="pinfl"
+                name="auth[pinfl]"
                 control={control}
                 rules={{
                   required: "ПИНФЛ обязателен",
-                  pattern: { value: /^\d{13}$/, message: "Некорректный ПИНФЛ" },
+                  pattern: { value: /^\d{14}$/, message: "Некорректный ПИНФЛ" },
                 }}
                 render={({ field }) => (
                   <input
@@ -73,6 +87,7 @@ function VerificationPage() {
                     type="text"
                     className="text-gray-800 dark:text-white bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 w-full text-sm px-4 py-3 rounded-md outline-blue-500"
                     placeholder="12345678901234"
+                    required="required"
                   />
                 )}
               />
@@ -85,7 +100,7 @@ function VerificationPage() {
                 Серия Паспорта <span className="text-red-500">*</span>
               </label>
               <Controller
-                name="passport"
+                name="auth[pass_data]"
                 control={control}
                 rules={{
                   required: "Серия паспорта обязательна",
@@ -100,6 +115,7 @@ function VerificationPage() {
                     type="text"
                     className="text-gray-800 dark:text-white bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 w-full text-sm px-4 py-3 rounded-md outline-blue-500"
                     placeholder="AA1234567"
+                    required="required"
                   />
                 )}
               />
@@ -114,7 +130,7 @@ function VerificationPage() {
                 Дата рождения <span className="text-red-500">*</span>
               </label>
               <Controller
-                name="dob"
+                name="auth[birth_date]"
                 control={control}
                 rules={{ required: "Дата рождения обязательна" }}
                 render={({ field }) => (
@@ -122,6 +138,7 @@ function VerificationPage() {
                     {...field}
                     type="date"
                     className="text-gray-800 dark:text-white bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 w-full text-sm px-4 py-3 rounded-md outline-blue-500"
+                    required="required"
                   />
                 )}
               />

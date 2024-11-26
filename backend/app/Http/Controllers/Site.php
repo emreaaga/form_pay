@@ -17,8 +17,8 @@ class Site extends Controller
     }
     public function auth(Request $request) {
 
-        if($request->get('auth')) {
-            $request_data = $request->get('auth');
+        if($request->post('auth')) {
+            $request_data = $request->post('auth');
             foreach($request_data as $key =>$value) {
                 $request_data[$key] = AppServiceProvider::filter_input($key, $value);
             }
