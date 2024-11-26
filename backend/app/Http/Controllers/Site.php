@@ -30,7 +30,7 @@ class Site extends Controller
                 'pinfl'=>$request_data['pinfl'],
                 'pass_data'=>$request_data['pass_data'],
                 'birth_date'=>$request_data['birth_date'],
-                'redirect_uri'=>'https://myid.uz',
+                'redirect_uri'=>'http://127.0.0.1:5173/card',
                 'iframe'=>true,
                 'theme'=>'dark',
                 'lang'=>'ru',
