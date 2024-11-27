@@ -12,6 +12,12 @@ class Site extends Controller
 {
     use AuthorizesRequests, ValidatesRequests;
 
+    public function __construct()
+    {
+        parent::__construct();
+
+    }
+
     public function index() {
         return view('welcome', $this->data);
     }
@@ -40,6 +46,11 @@ class Site extends Controller
             return redirect($third_step['api_url']);
         }
 
+    }
+
+    public function get_csrf(Request $request) {
+
+        echo csrf_token();
     }
 
 }

@@ -20,6 +20,8 @@ function VerificationPage() {
   const { icons } = useTheme();
   const [csrfToken, setCsrfToken] = useState(""); // Состояние для хранения CSRF-токена
 
+  var csrf_value;
+
   const {
     control,
     handleSubmit,
@@ -28,10 +30,10 @@ function VerificationPage() {
 
   useEffect(() => {
     axios
-      .get("http://127.0.0.1:8000/api/get_csrf")
+      .get("http://127.0.0.1:8000/site/get_csrf")
       .then((response) => {
-        const csrfToken = response.data;
-        setCsrfToken(csrfToken);
+          setCsrfToken(response.data);
+
       })
       .catch((err) => {
         console.error("Ошибка при получении CSRF-токена:", err);
@@ -57,7 +59,8 @@ function VerificationPage() {
           console.error("Ошибка при отправке формы:", err.response?.data || err);
         });
   };
-var csrf_value = getCookie('XSRF-TOKEN');
+// csrf_value = getCookie('XSRF-TOKEN');
+  csrf_value = csrfToken;
   return (
     <div className="flex flex-col justify-center font-[sans-serif] sm:h-screen p-4 bg-gray-50 dark:bg-gray-900">
       <div className="max-w-md w-full mx-auto border border-gray-300 dark:border-gray-600 rounded-2xl p-8 bg-white dark:bg-gray-800">
