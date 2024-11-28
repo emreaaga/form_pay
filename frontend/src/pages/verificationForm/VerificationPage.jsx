@@ -5,7 +5,6 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 
 function VerificationPage() {
-  const navigate = useNavigate();
   const { icons } = useTheme();
   const [csrfToken, setCsrfToken] = useState(""); // Состояние для CSRF-токена
 
@@ -38,7 +37,7 @@ function VerificationPage() {
       })
       .then((response) => {
         console.log("Успешный ответ:", response.data);
-        navigate("/");
+        window.location.href = "http://127.0.0.1:8000/api/auth";
       })
       .catch((err) => {
         console.error("Ошибка при отправке формы:", err.response?.data || err);
