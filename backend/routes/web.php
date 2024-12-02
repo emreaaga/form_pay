@@ -17,3 +17,4 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', ['uses'=>'App\Http\Controllers\Site@index']);
 Route::get('/auth', ['uses'=>'App\Http\Controllers\Site@auth']);
 Route::get('/site/get_csrf', ['uses'=>'App\Http\Controllers\Site@get_csrf']);
+Route::get('/site/sign-in', ['uses'=>'App\Http\Controllers\Site@signin']);

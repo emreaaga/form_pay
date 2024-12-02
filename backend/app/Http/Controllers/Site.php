@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Routing\Controller as BaseController;
+use Illuminate\Support\Facades\DB;
+use App\Models\Data;
 
 class Site extends Controller
 {
@@ -43,9 +45,56 @@ class Site extends Controller
             ];
 
             $third_step = AppServiceProvider::myid_third_step(['send_data'=>$params]);
-            return redirect($third_step['api_url']);
+            if(isset($third_step['api_url'])) {
+                $row = DB::table(MYID_DB_TABLE['table'])->select(DB::raw('id, session_id'))->where(['session_id'=>$params['session_id']])->where('status','>',0)->first();
+                $row = (array)$row;
+                $info_data = [];
+
+                $info_data = array_merge($info_data, $request_data);
+                if(empty($row['id'])) {
+
+                    $info_data['id'] = Data::get_sequence(MYID_DB_TABLE['sequence'])[0]->nextval;
+                    $info_data['session_id'] = $params['session_id'];
+                    $info_data['redirect_uri'] = $params['redirect_uri'];
+
+                    $result_row = DB::table(MYID_DB_TABLE['table'])->insert($info_data);
+                } else {
+                    $result_row = DB::table(MYID_DB_TABLE['table'])->where(['id'=>$row['id']])->where('status','>',0)->update($info_data);
+                }
+                if($result_row) {
+                    return redirect($third_step['api_url']);
+                }
+
+            } else {
+
+            }
+
         }
 
+    }
+
+    public function signin(Request $request) {
+        $result_row = null;
+        if($request->get('session_id') && $request->get('auth_code')) {
+            $request_data = [
+                'session_id'=>$request->get('session_id'),
+                'auth_code'=>$request->get('auth_code')
+            ];
+            foreach ($request_data as $key => $value) {
+                $request_data[$key] = AppServiceProvider::filter_input($key, $value);
+            }
+            $row = DB::table(MYID_DB_TABLE['table'])->select(DB::raw('id, session_id'))->where(['session_id'=>$request_data['session_id']])->where('status','>',0)->first();
+            $row = (array)$row;
+            if(isset($row['id'])) {
+                $result_row = DB::table(MYID_DB_TABLE['table'])->where(['id'=>$row['id']])->where('status','>',0)->update($request_data);
+            } else {
+                abort(404);
+            }
+
+            if($result_row) {
+                echo "<h1>OK</h1>";
+            }
+        }
     }
 
     public function get_csrf(Request $request) {

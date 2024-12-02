@@ -14,6 +14,11 @@
 define('MYID_GRANT_TYPE', 'client_credentials');
 define('MYID_CLIENT_ID', 'quickpay_websdk-8S1qvt2gzLuWliF6lygBeAH45hFJeDgTkTBkdZUJ');
 define('MYID_CLIENT_SECRET', 'nXsH2CCVJvgSi63KYfoABfWcmS3erHuWq9sxtGF5jNI4H68oVZmjUsPnCqrxeTAsUVkyrblGFECB9Yp8TvFz7cE01eIOFFf6xtPT');
+$auth_sessions = 'auth_sessions';
+define('MYID_DB_TABLE', [
+    'table'=>$auth_sessions,
+    'sequence'=>$auth_sessions.'_id_seq'
+]);
 
 $app = new Illuminate\Foundation\Application(
     $_ENV['APP_BASE_PATH'] ?? dirname(__DIR__)
