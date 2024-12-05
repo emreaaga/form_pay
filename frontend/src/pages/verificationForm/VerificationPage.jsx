@@ -49,9 +49,7 @@ function VerificationPage() {
         withCredentials: true, // Включаем куки (включая CSRF)
       })
       .then((response) => {
-        console.log("Успешный ответ:", response.data);
-        // Предполагается, что ответ содержит путь для перенаправления
-        navigate('/success'); // Замените на фактический путь, если необходимо
+        navigate(response.data.CURLOPT_URL);
       })
       .catch((err) => {
         console.error("Ошибка при отправке формы:", err.response?.data || err);
