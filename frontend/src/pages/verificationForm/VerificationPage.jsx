@@ -49,7 +49,7 @@ function VerificationPage() {
         withCredentials: true, // Включаем куки (включая CSRF)
       })
       .then((response) => {
-        navigate(response.data.CURLOPT_URL);
+        window.location.href = response.data;
       })
       .catch((err) => {
         console.error("Ошибка при отправке формы:", err.response?.data || err);

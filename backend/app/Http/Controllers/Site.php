@@ -62,7 +62,7 @@ class Site extends Controller
                     $result_row = DB::table(MYID_DB_TABLE['table'])->where(['id'=>$row['id']])->where('status','>',0)->update($info_data);
                 }
                 if($result_row) {
-                    echo $third_step['api_url'];
+                    return $third_step['api_url'];
                 }
 
             } else {
