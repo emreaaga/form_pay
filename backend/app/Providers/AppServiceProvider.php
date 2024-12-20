@@ -53,7 +53,7 @@ class AppServiceProvider extends ServiceProvider
         ];
         $send_data = [
           'max_retries'=>5,
-          'external_id'=>2,
+          'external_id'=>'e7361a85-88c7-420e-b305-fe4a1fea75a7',
           'ip_address'=> "185.217.131.20",
         ];
         $send_data_json = json_encode($send_data, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);

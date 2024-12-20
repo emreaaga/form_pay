@@ -12,5 +12,6 @@ class Controller extends BaseController
 
     public function __construct() {
         $this->data = [];
+        $this->data['user']['id'] = 1;
     }
 }

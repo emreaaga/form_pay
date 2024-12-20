@@ -2,13 +2,16 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use App\Providers\AppServiceProvider;
 use Illuminate\Http\Request;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Routing\Controller as BaseController;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use App\Models\Data;
+use Illuminate\Support\Facades\Session;
 
 class Site extends Controller
 {
@@ -33,6 +36,7 @@ class Site extends Controller
 
             $first_step = AppServiceProvider::myid_first_step();
             $second_step = AppServiceProvider::myid_second_step($first_step['array']);
+
             $params = [
                 'session_id'=>$second_step['array']['session_id'],
                 'pinfl'=>$request_data['pinfl'],
@@ -45,9 +49,12 @@ class Site extends Controller
             ];
 
             $third_step = AppServiceProvider::myid_third_step(['send_data'=>$params]);
+
             if(isset($third_step['api_url'])) {
                 $row = DB::table(MYID_DB_TABLE['table'])->select(DB::raw('id, session_id'))->where(['session_id'=>$params['session_id']])->where('status','>',0)->first();
+                $row = User::where(['session_id'=>$params['session_id']])->first();
                 $row = (array)$row;
+                $result_row = null;
                 $info_data = [];
 
                 $info_data = array_merge($info_data, $request_data);
@@ -56,13 +63,33 @@ class Site extends Controller
                     $info_data['id'] = Data::get_sequence(MYID_DB_TABLE['sequence'])[0]->nextval;
                     $info_data['session_id'] = $params['session_id'];
                     $info_data['redirect_uri'] = $params['redirect_uri'];
-
-                    $result_row = DB::table(MYID_DB_TABLE['table'])->insert($info_data);
+                    $info_data['name'] = $info_data['pinfl'];
+                    $set_session = \session()->put('user', $info_data);
+                    if(\session()->get('user')) {
+                        $result_row = DB::table(MYID_DB_TABLE['table'])->insert($info_data);
+                    }
                 } else {
                     $result_row = DB::table(MYID_DB_TABLE['table'])->where(['id'=>$row['id']])->where('status','>',0)->update($info_data);
                 }
                 if($result_row) {
-                    return $third_step['api_url'];
+                    var_dump(Auth::check());die;
+                    if (Auth::attempt($info_data, true)) {
+                        $request->session()->regenerate();
+                        if (Auth::user()->user_type == 'Administrator')
+                        {
+                            return redirect()->intended('admin/dashboard');
+                        } else {
+                            return redirect()->intended('dashboard');
+                        }
+                    }
+
+                    $set_session_user_id = DB::table('sessions')
+                        ->where('id', session()->getId()) // Match the session ID
+                        ->update(['user_id' => $info_data['id']]);
+                    if($set_session_user_id) {
+                        return $third_step['api_url'];
+                    }
+
                 }
 
             } else {
